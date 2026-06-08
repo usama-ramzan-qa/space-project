@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exoplanet Explorer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #0f0f2e 0%, #1a0a3e 50%, #0f0f2e 100%);
+  color: #e0e0e0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.stars {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle 3s infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.container {
+  position: relative;
+  z-index: 10;
+  max-width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.header {
+  margin-bottom: 60px;
+  animation: slideDown 0.8s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.title {
+  font-family: 'Cinzel', serif;
+  font-size: 72px;
+  font-weight: 400;
+  letter-spacing: 8px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #ffd700, #ff9500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+  }
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #b0b0d0;
+  font-weight: 300;
+  line-height: 1.8;
+  max-width: 600px;
+  margin: 0 auto 40px;
+  animation: fadeIn 1s ease-out 0.3s both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.planets-display {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: 300px;
+  margin-bottom: 80px;
+  perspective: 1000px;
+}
+
+.planet {
+  position: absolute;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
+  animation: float 6s ease-in-out infinite;
+}
+
+.planet:nth-child(1) {
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle at 30% 30%, #ff8c42, #ff6b42);
+  top: 50px;
+  left: 50px;
+  animation-delay: 0s;
+}
+
+.planet:nth-child(2) {
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle at 35% 35%, #4a90e2, #2e5c8a);
+  top: 30px;
+  right: 80px;
+  animation-delay: 1s;
+}
+
+.planet:nth-child(3) {
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle at 40% 40%, #50e3c2, #2fa89f);
+  bottom: 50px;
+  left: 100px;
+  animation-delay: 2s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-30px);
+    opacity: 1;
+  }
+}
+
+.search-section {
+  margin-bottom: 60px;
+  animation: slideUp 0.8s ease-out 0.2s both;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.search-input {
+  width: 100%;
+  max-width: 500px;
+  padding: 16px 24px;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 50px;
+  color: #e0e0e0;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.search-input::placeholder {
+  color: rgba(224, 224, 224, 0.4);
+}
+
+.search-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #ffd700;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 16px 48px;
+  margin-top: 30px;
+  font-size: 18px;
+  font-weight: 500;
+  background: linear-gradient(135deg, #ffd700, #ff9500);
+  color: #000;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  animation: slideUp 0.8s ease-out 0.4s both;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+}
+
+.cta-button:active {
+  transform: translateY(-1px);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  margin-top: 60px;
+  width: 100%;
+  max-width: 500px;
+  animation: slideUp 0.8s ease-out 0.5s both;
+}
+
+.stat {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.stat:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 215, 0, 0.4);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+}
+
+.stat-number {
+  font-size: 32px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #ffd700, #ff9500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #8080a0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 60px;
+  width: 100%;
+  max-width: 600px;
+  animation: slideUp 0.8s ease-out 0.6s both;
+}
+
+.feature {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  border-radius: 12px;
+  padding: 24px 16px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.feature:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+.feature-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.feature-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #e0e0e0;
+}
+
+@media (max-width: 768px) {
+  .title { font-size: 48px; letter-spacing: 4px; }
+  .subtitle { font-size: 16px; }
+  .planets-display { height: 200px; }
+}
+</style>
+</head>
+<body>
+
+<div class="stars" id="starsContainer"></div>
+
+<div class="container">
+  <div class="header">
+    <h1 class="title">EXOPLANET</h1>
+    <p class="subtitle">
+      Discover potentially habitable worlds beyond Earth. Analyze real exoplanet data and explore the universe's hidden gems.
+    </p>
+  </div>
+
+  <div class="planets-display">
+    <div class="planet"></div>
+    <div class="planet"></div>
+    <div class="planet"></div>
+  </div>
+
+  <div class="search-section">
+    <input type="text" class="search-input" placeholder="Search by planet name or star system..." id="searchInput">
+    <button class="cta-button" onclick="scrollToExplorer()">Explore Database →</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-number">5,000+</div>
+      <div class="stat-label">Known Exoplanets</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">380+</div>
+      <div class="stat-label">Potentially Habitable</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">2024</div>
+      <div class="stat-label">Latest Data</div>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">🔭</div>
+      <div class="feature-name">Real NASA Data</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-name">Instant Analysis</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📊</div>
+      <div class="feature-name">Detailed Metrics</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function generateStars() {
+  const starsContainer = document.getElementById('starsContainer');
+  const starCount = 200;
+  
+  for (let i = 0; i < starCount; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 3 + 's';
+    starsContainer.appendChild(star);
+  }
+}
+
+function scrollToExplorer() {
+  const searchValue = document.getElementById('searchInput').value;
+  if (searchValue) {
+    sendPrompt(`Show me exoplanet data for: ${searchValue}`);
+  } else {
+    sendPrompt('Show me the exoplanet explorer tool');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', generateStars);
+
+document.getElementById('searchInput').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') scrollToExplorer();
+});
+</script>
+
+</body>
+</html>
